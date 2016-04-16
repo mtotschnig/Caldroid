@@ -1418,8 +1418,8 @@ public class CaldroidFragment extends DialogFragment {
             dateGridFragment.setGridViewRes(getGridViewRes());
             dateGridFragment.setGridAdapter(adapter);
             dateGridFragment.setOnItemClickListener(getDateItemClickListener());
-            dateGridFragment
-                    .setOnItemLongClickListener(getDateItemLongClickListener());
+/*            dateGridFragment
+                    .setOnItemLongClickListener(getDateItemLongClickListener());*/
         }
 
         // Setup InfinitePagerAdapter to wrap around MonthPagerAdapter

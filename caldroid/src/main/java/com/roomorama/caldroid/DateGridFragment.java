@@ -105,6 +105,8 @@ public class DateGridFragment extends Fragment {
             }
         }
 
+        ((CaldroidFragment) getParentFragment()).getCaldroidListener().onGridCreated(gridView);
+
         return gridView;
     }
 

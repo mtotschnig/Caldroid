@@ -3,6 +3,7 @@ package com.roomorama.caldroid;
 import java.util.Date;
 
 import android.view.View;
+import android.widget.GridView;
 
 /**
  * CaldroidListener inform when user clicks on a valid date (not within disabled
@@ -52,6 +53,10 @@ public abstract class CaldroidListener {
      * no longer null. Useful for customization of button and text views
      */
     public void onCaldroidViewCreated() {
+        // Do nothing
+    }
+
+    public void onGridCreated(GridView gridView) {
         // Do nothing
     }
 }
