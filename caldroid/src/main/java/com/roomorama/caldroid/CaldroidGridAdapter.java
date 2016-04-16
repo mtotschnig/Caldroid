@@ -269,7 +269,7 @@ public class CaldroidGridAdapter extends BaseAdapter {
         }
     }
 
-    private void resetCustomResources(CellView cellView) {
+    protected void resetCustomResources(CellView cellView) {
         cellView.setBackgroundResource(defaultCellBackgroundRes);
         cellView.setTextColor(defaultTextColorRes);
     }
