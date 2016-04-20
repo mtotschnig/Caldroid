@@ -79,6 +79,8 @@ import hirondelle.date4j.DateTime;
 
 @SuppressLint("DefaultLocale")
 public class CaldroidFragment extends DialogFragment {
+    public static final String KEY_CALDROID_SAVED_STATE = "CALDROID_SAVED_STATE";
+    private static final String KEY_CURRENT_PAGE = "CURRENT_PAGE";
     /**
      * Weekday conventions
      */
@@ -129,6 +131,11 @@ public class CaldroidFragment extends DialogFragment {
     private ArrayList<DateGridFragment> fragments;
 
     private int themeResource = R.style.CaldroidDefault;
+
+  /**
+   * needed for correctly restoring the month after orientation change
+   */
+  private int initialPage = InfiniteViewPager.OFFSET;
 
     /**
      * Initial params key
@@ -509,6 +516,7 @@ public class CaldroidFragment extends DialogFragment {
         if (dialogTitle != null) {
             bundle.putString(DIALOG_TITLE, dialogTitle);
         }
+        bundle.putInt(DIALOG_TITLE_CUSTOM_VIEW, dialogTitleCustomView);
 
         if (selectedDates != null && selectedDates.size() > 0) {
             bundle.putStringArrayList(SELECTED_DATES,
@@ -539,6 +547,7 @@ public class CaldroidFragment extends DialogFragment {
             bundle.putBoolean(SQUARE_TEXT_VIEW_CELL, args.getBoolean(SQUARE_TEXT_VIEW_CELL));
         }
 
+        bundle.putInt(KEY_CURRENT_PAGE, pageChangeListener.getCurrentPage());
         return bundle;
     }
 
@@ -564,6 +573,13 @@ public class CaldroidFragment extends DialogFragment {
             setArguments(caldroidSavedState);
         }
     }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        saveStatesToKey(outState, KEY_CALDROID_SAVED_STATE);
+    }
+
 
     /**
      * Restore state for dialog
@@ -1082,9 +1098,7 @@ public class CaldroidFragment extends DialogFragment {
      * dialogTitle, showNavigationArrows,(String) disableDates, selectedDates,
      * minDate, maxDate, squareTextViewCell
      */
-    protected void retrieveInitialArgs() {
-        // Get arguments
-        Bundle args = getArguments();
+    protected void retrieveInitialArgs(Bundle args) {
 
         CalendarHelper.setup();
 
@@ -1177,6 +1191,8 @@ public class CaldroidFragment extends DialogFragment {
 
             // Get theme
             themeResource = args.getInt(THEME_RESOURCE, R.style.CaldroidDefault);
+
+            initialPage = args.getInt(KEY_CURRENT_PAGE, InfiniteViewPager.OFFSET);
         }
         if (month == -1 || year == -1) {
             DateTime dateTime = DateTime.today(TimeZone.getDefault());
@@ -1243,7 +1259,8 @@ public class CaldroidFragment extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        retrieveInitialArgs();
+        retrieveInitialArgs(savedInstanceState == null ? getArguments() :
+            savedInstanceState.getBundle(KEY_CALDROID_SAVED_STATE));
 
         // To support keeping instance for dialog
         if (getDialog() != null) {
@@ -1348,6 +1365,7 @@ public class CaldroidFragment extends DialogFragment {
 
         // Set to pageChangeListener
         pageChangeListener = new DatePageChangeListener();
+        pageChangeListener.setCurrentPage(initialPage);
         pageChangeListener.setCurrentDateTime(currentDateTime);
 
         // Setup adapters for the grid views
@@ -1406,21 +1424,17 @@ public class CaldroidFragment extends DialogFragment {
         // InfinitePagerAdapter only recycles fragment provided by this
         // MonthPagerAdapter
         final MonthPagerAdapter pagerAdapter = new MonthPagerAdapter(
-                getChildFragmentManager());
-
-        // Provide initial data to the fragments, before they are attached to
-        // view.
-        fragments = pagerAdapter.getFragments();
-
-        for (int i = 0; i < NUMBER_OF_PAGES; i++) {
-            DateGridFragment dateGridFragment = fragments.get(i);
-            CaldroidGridAdapter adapter = datePagerAdapters.get(i);
-            dateGridFragment.setGridViewRes(getGridViewRes());
-            dateGridFragment.setGridAdapter(adapter);
-            dateGridFragment.setOnItemClickListener(getDateItemClickListener());
-/*            dateGridFragment
-                    .setOnItemLongClickListener(getDateItemLongClickListener());*/
-        }
+                getChildFragmentManager()) {
+            @Override
+            public Object instantiateItem(ViewGroup container, int position) {
+                DateGridFragment fragment =
+                    ((DateGridFragment) super.instantiateItem(container, position));
+                CaldroidGridAdapter adapter = datePagerAdapters.get(position);
+                fragment.setGridAdapter(adapter);
+                fragment.setupGridView();
+                return fragment;
+            }
+        };
 
         // Setup InfinitePagerAdapter to wrap around MonthPagerAdapter
         InfinitePagerAdapter infinitePagerAdapter = new InfinitePagerAdapter(

@@ -9,8 +9,6 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.GridView;
 
-import com.caldroid.R;
-
 /**
  * DateGridFragment contains only 1 gridview with 7 columns to display all the
  * dates within a month.
@@ -25,7 +23,6 @@ public class DateGridFragment extends Fragment {
     private CaldroidGridAdapter gridAdapter;
     private OnItemClickListener onItemClickListener;
     private OnItemLongClickListener onItemLongClickListener;
-    private int gridViewRes = 0;
     private int themeResource = 0;
 
     public OnItemClickListener getOnItemClickListener() {
@@ -56,13 +53,11 @@ public class DateGridFragment extends Fragment {
         return gridView;
     }
 
-    public void setGridViewRes(int gridViewRes) {
-        this.gridViewRes = gridViewRes;
-    }
+    void setupGridView() {
 
-    private void setupGridView() {
-
-
+        if (gridView == null) {
+            return;
+        }
         // Client normally needs to provide the adapter and onItemClickListener
         // before the fragment is attached to avoid complex crash due to
         // fragment life cycles
@@ -82,10 +77,7 @@ public class DateGridFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        // If gridViewRes is not valid, use default fragment layout
-        if (gridViewRes == 0) {
-            gridViewRes = R.layout.date_grid_fragment;
-        }
+        int gridViewRes = ((CaldroidFragment) getParentFragment()).getGridViewRes();
 
         if (themeResource == 0) {
             if (gridAdapter != null) {
@@ -109,5 +101,4 @@ public class DateGridFragment extends Fragment {
 
         return gridView;
     }
-
 }
