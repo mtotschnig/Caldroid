@@ -81,7 +81,8 @@ import hirondelle.date4j.DateTime;
 public class CaldroidFragment extends DialogFragment {
     public static final String KEY_CALDROID_SAVED_STATE = "CALDROID_SAVED_STATE";
     private static final String KEY_CURRENT_PAGE = "CURRENT_PAGE";
-    /**
+  public static final String KEY_GRID_POSITION_IN_ADAPTER = "POSITION";
+  /**
      * Weekday conventions
      */
     public static int
@@ -1262,15 +1263,6 @@ public class CaldroidFragment extends DialogFragment {
         retrieveInitialArgs(savedInstanceState == null ? getArguments() :
             savedInstanceState.getBundle(KEY_CALDROID_SAVED_STATE));
 
-        // To support keeping instance for dialog
-        if (getDialog() != null) {
-            try {
-                setRetainInstance(true);
-            } catch (IllegalStateException e) {
-                e.printStackTrace();
-            }
-        }
-
         LayoutInflater localInflater = getThemeInflater(getActivity(), inflater, themeResource);
 
         // This is a hack to fix issue localInflater doesn't use the themeResource, make Android
@@ -1424,17 +1416,7 @@ public class CaldroidFragment extends DialogFragment {
         // InfinitePagerAdapter only recycles fragment provided by this
         // MonthPagerAdapter
         final MonthPagerAdapter pagerAdapter = new MonthPagerAdapter(
-                getChildFragmentManager()) {
-            @Override
-            public Object instantiateItem(ViewGroup container, int position) {
-                DateGridFragment fragment =
-                    ((DateGridFragment) super.instantiateItem(container, position));
-                CaldroidGridAdapter adapter = datePagerAdapters.get(position);
-                fragment.setGridAdapter(adapter);
-                fragment.setupGridView();
-                return fragment;
-            }
-        };
+                getChildFragmentManager());
 
         // Setup InfinitePagerAdapter to wrap around MonthPagerAdapter
         InfinitePagerAdapter infinitePagerAdapter = new InfinitePagerAdapter(

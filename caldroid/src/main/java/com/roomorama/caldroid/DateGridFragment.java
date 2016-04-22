@@ -5,8 +5,6 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.GridView;
 
 /**
@@ -19,86 +17,40 @@ import android.widget.GridView;
  * @author thomasdao
  */
 public class DateGridFragment extends Fragment {
-    private GridView gridView;
-    private CaldroidGridAdapter gridAdapter;
-    private OnItemClickListener onItemClickListener;
-    private OnItemLongClickListener onItemLongClickListener;
-    private int themeResource = 0;
+  private GridView gridView;
+  private int themeResource = 0;
 
-    public OnItemClickListener getOnItemClickListener() {
-        return onItemClickListener;
+  @Override
+  public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                           Bundle savedInstanceState) {
+
+    CaldroidFragment parentFragment = (CaldroidFragment) getParentFragment();
+    int gridViewRes = parentFragment.getGridViewRes();
+
+    CaldroidGridAdapter gridAdapter = parentFragment.datePagerAdapters
+        .get(getArguments().getInt(CaldroidFragment.KEY_GRID_POSITION_IN_ADAPTER));
+
+    themeResource = gridAdapter.getThemeResource();
+
+    if (gridView == null) {
+      LayoutInflater localInflater = CaldroidFragment.getThemeInflater(getActivity(),
+          inflater, themeResource);
+      gridView = (GridView) localInflater.inflate(gridViewRes, container, false);
+      gridView.setAdapter(gridAdapter);
+    } else {
+      ViewGroup parent = (ViewGroup) gridView.getParent();
+      if (parent != null) {
+        parent.removeView(gridView);
+      }
     }
 
-    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
-        this.onItemClickListener = onItemClickListener;
-    }
+    parentFragment.getCaldroidListener().onGridCreated(gridView);
 
-    public OnItemLongClickListener getOnItemLongClickListener() {
-        return onItemLongClickListener;
-    }
+    return gridView;
+  }
 
-    public void setOnItemLongClickListener(OnItemLongClickListener onItemLongClickListener) {
-        this.onItemLongClickListener = onItemLongClickListener;
-    }
-
-    public CaldroidGridAdapter getGridAdapter() {
-        return gridAdapter;
-    }
-
-    public void setGridAdapter(CaldroidGridAdapter gridAdapter) {
-        this.gridAdapter = gridAdapter;
-    }
-
-    public GridView getGridView() {
-        return gridView;
-    }
-
-    void setupGridView() {
-
-        if (gridView == null) {
-            return;
-        }
-        // Client normally needs to provide the adapter and onItemClickListener
-        // before the fragment is attached to avoid complex crash due to
-        // fragment life cycles
-        if (gridAdapter != null) {
-            gridView.setAdapter(gridAdapter);
-        }
-
-        if (onItemClickListener != null) {
-            gridView.setOnItemClickListener(onItemClickListener);
-        }
-        if (onItemLongClickListener != null) {
-            gridView.setOnItemLongClickListener(onItemLongClickListener);
-        }
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-
-        int gridViewRes = ((CaldroidFragment) getParentFragment()).getGridViewRes();
-
-        if (themeResource == 0) {
-            if (gridAdapter != null) {
-                themeResource = gridAdapter.getThemeResource();
-            }
-        }
-
-        if (gridView == null) {
-            LayoutInflater localInflater = CaldroidFragment.getThemeInflater(getActivity(),
-                    inflater, themeResource);
-            gridView = (GridView) localInflater.inflate(gridViewRes, container, false);
-            setupGridView();
-        } else {
-            ViewGroup parent = (ViewGroup) gridView.getParent();
-            if (parent != null) {
-                parent.removeView(gridView);
-            }
-        }
-
-        ((CaldroidFragment) getParentFragment()).getCaldroidListener().onGridCreated(gridView);
-
-        return gridView;
-    }
+  @Override
+  public void onSaveInstanceState(Bundle outState) {
+    super.onSaveInstanceState(outState);
+  }
 }

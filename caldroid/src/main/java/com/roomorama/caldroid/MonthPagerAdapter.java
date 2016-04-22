@@ -2,6 +2,7 @@ package com.roomorama.caldroid;
 
 import java.util.ArrayList;
 
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -22,6 +23,9 @@ public class MonthPagerAdapter extends FragmentPagerAdapter {
     @Override
     public Fragment getItem(int position) {
         DateGridFragment fragment = new DateGridFragment();
+        Bundle args = new Bundle(1);
+        args.putInt(CaldroidFragment.KEY_GRID_POSITION_IN_ADAPTER, position);
+        fragment.setArguments(args);
         return fragment;
     }
 
