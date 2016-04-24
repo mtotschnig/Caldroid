@@ -5,6 +5,12 @@
     style="?styleCaldroidViewLayout"
     android:orientation="vertical" >
 
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/calendar_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"/>
+
     <LinearLayout
         android:id="@+id/calendar_title_view"
         android:layout_width="match_parent"
