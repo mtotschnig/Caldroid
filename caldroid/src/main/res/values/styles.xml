@@ -106,5 +106,5 @@
     </style>
 
     <style name="CaldroidDefaultDarkSquareCell" parent="CaldroidDefaultDarkCell" />
-
+    <bool name="remeasureViewPager">false</bool>
 </resources>

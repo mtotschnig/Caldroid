@@ -1,11 +1,14 @@
 package com.antonyt.infiniteviewpager;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+
+import com.caldroid.R;
 
 import java.util.ArrayList;
 
@@ -113,6 +116,8 @@ public class InfiniteViewPager extends ViewPager {
 	@Override
 	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 		super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+
+		if (!getResources().getBoolean(R.bool.remeasureViewPager)) return;
 
 		// Calculate row height
 		int rows = datesInMonth.size() / 7;
