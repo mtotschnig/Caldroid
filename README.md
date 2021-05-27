@@ -291,12 +291,6 @@ Caldroid inform clients via CaldroidListener.
 final CaldroidListener listener = new CaldroidListener() {
 
 	@Override
-	public void onSelectDate(Date date, View view) {
-		Toast.makeText(getApplicationContext(), formatter.format(date),
-				Toast.LENGTH_SHORT).show();
-	}
-
-	@Override
 	public void onChangeMonth(int month, int year) {
 		String text = "month: " + month + " year: " + year;
 		Toast.makeText(getApplicationContext(), text,
@@ -327,11 +321,6 @@ User can also customize the navigation arrows and month title textView: font, si
 
 ```java
 final CaldroidListener listener = new CaldroidListener() {
-
-    @Override
-    public void onSelectDate(Date date, View view) {
-        // Do something
-    }
 
     @Override
     public void onCaldroidViewCreated() {

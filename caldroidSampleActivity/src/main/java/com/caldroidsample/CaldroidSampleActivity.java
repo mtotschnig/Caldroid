@@ -4,17 +4,15 @@ import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentTransaction;
 import com.roomorama.caldroid.CaldroidFragment;
 import com.roomorama.caldroid.CaldroidListener;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -104,22 +102,9 @@ public class CaldroidSampleActivity extends AppCompatActivity {
         final CaldroidListener listener = new CaldroidListener() {
 
             @Override
-            public void onSelectDate(Date date, View view) {
-                Toast.makeText(getApplicationContext(), formatter.format(date),
-                        Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
             public void onChangeMonth(int month, int year) {
                 String text = "month: " + month + " year: " + year;
                 Toast.makeText(getApplicationContext(), text,
-                        Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onLongClickDate(Date date, View view) {
-                Toast.makeText(getApplicationContext(),
-                        "Long click " + formatter.format(date),
                         Toast.LENGTH_SHORT).show();
             }
 
