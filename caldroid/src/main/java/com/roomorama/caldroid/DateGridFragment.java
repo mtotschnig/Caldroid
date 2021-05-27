@@ -1,11 +1,11 @@
 package com.roomorama.caldroid;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
+import androidx.fragment.app.Fragment;
 
 /**
  * DateGridFragment contains only 1 gridview with 7 columns to display all the

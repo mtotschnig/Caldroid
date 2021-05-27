@@ -7,11 +7,6 @@ import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.text.format.DateUtils;
 import android.text.format.Time;
 import android.view.ContextThemeWrapper;
@@ -20,18 +15,17 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.TextView;
-
+import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.viewpager.widget.ViewPager.OnPageChangeListener;
 import com.antonyt.infiniteviewpager.InfinitePagerAdapter;
 import com.antonyt.infiniteviewpager.InfiniteViewPager;
 import com.caldroid.R;
-
-import java.lang.reflect.Field;
+import hirondelle.date4j.DateTime;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -42,8 +36,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
-
-import hirondelle.date4j.DateTime;
 
 /**
  * Caldroid is a fragment that display calendar with dates in a month. Caldroid
@@ -230,18 +222,7 @@ public class CaldroidFragment extends DialogFragment {
      */
     protected boolean squareTextViewCell;
 
-    /**
-     * dateItemClickListener is fired when user click on the date cell
-     */
-    private OnItemClickListener dateItemClickListener;
-
-    /**
-     * dateItemLongClickListener is fired when user does a longclick on the date
-     * cell
-     */
-    private OnItemLongClickListener dateItemLongClickListener;
-
-    /**
+  /**
      * caldroidListener inform library client of the event happens inside
      * Caldroid
      */
@@ -969,84 +950,7 @@ public class CaldroidFragment extends DialogFragment {
         this.caldroidListener = caldroidListener;
     }
 
-    /**
-     * Callback to listener when date is valid (not disable, not outside of
-     * min/max date)
-     *
-     * @return
-     */
-    public OnItemClickListener getDateItemClickListener() {
-        if (dateItemClickListener == null) {
-            dateItemClickListener = new OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view,
-                                        int position, long id) {
-
-                    DateTime dateTime = dateInMonthsList.get(position);
-
-                    if (caldroidListener != null) {
-                        if (!enableClickOnDisabledDates) {
-                            if ((minDateTime != null && dateTime
-                                    .lt(minDateTime))
-                                    || (maxDateTime != null && dateTime
-                                    .gt(maxDateTime))
-                                    || (disableDates != null && disableDates
-                                    .indexOf(dateTime) != -1)) {
-                                return;
-                            }
-                        }
-
-                        Date date = CalendarHelper
-                                .convertDateTimeToDate(dateTime);
-                        caldroidListener.onSelectDate(date, view);
-                    }
-                }
-            };
-        }
-
-        return dateItemClickListener;
-    }
-
-    /**
-     * Callback to listener when date is valid (not disable, not outside of
-     * min/max date)
-     *
-     * @return
-     */
-    public OnItemLongClickListener getDateItemLongClickListener() {
-        if (dateItemLongClickListener == null) {
-            dateItemLongClickListener = new OnItemLongClickListener() {
-                @Override
-                public boolean onItemLongClick(AdapterView<?> parent,
-                                               View view, int position, long id) {
-
-                    DateTime dateTime = dateInMonthsList.get(position);
-
-                    if (caldroidListener != null) {
-                        if (!enableClickOnDisabledDates) {
-                            if ((minDateTime != null && dateTime
-                                    .lt(minDateTime))
-                                    || (maxDateTime != null && dateTime
-                                    .gt(maxDateTime))
-                                    || (disableDates != null && disableDates
-                                    .indexOf(dateTime) != -1)) {
-                                return false;
-                            }
-                        }
-                        Date date = CalendarHelper
-                                .convertDateTimeToDate(dateTime);
-                        caldroidListener.onLongClickDate(date, view);
-                    }
-
-                    return true;
-                }
-            };
-        }
-
-        return dateItemLongClickListener;
-    }
-
-    /**
+  /**
      * Refresh month title text view when user swipe
      */
     protected void refreshMonthTitleTextView() {
@@ -1264,11 +1168,6 @@ public class CaldroidFragment extends DialogFragment {
             savedInstanceState.getBundle(KEY_CALDROID_SAVED_STATE));
 
         LayoutInflater localInflater = getThemeInflater(getActivity(), inflater, themeResource);
-
-        // This is a hack to fix issue localInflater doesn't use the themeResource, make Android
-        // complain about layout_width and layout_height missing. I'm unsure about its impact
-        // for app that wants to change theme dynamically.
-        getActivity().setTheme(themeResource);
 
         View view = localInflater.inflate(R.layout.calendar_view, container, false);
 

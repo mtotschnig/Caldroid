@@ -1,18 +1,14 @@
 package com.antonyt.infiniteviewpager;
 
 import android.content.Context;
-import android.content.res.Configuration;
-import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
-
+import androidx.viewpager.widget.PagerAdapter;
+import androidx.viewpager.widget.ViewPager;
 import com.caldroid.R;
-
-import java.util.ArrayList;
-
 import hirondelle.date4j.DateTime;
+import java.util.ArrayList;
 
 /**
  * A {@link ViewPager} that allows pseudo-infinite paging with a wrap-around
